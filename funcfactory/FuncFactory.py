@@ -8,6 +8,8 @@ import logging
 # custom imports
 from funcfactory.enums.severity_level import SeverityLevel
 from funcfactory.enums.check_result import CheckResult
+from funcfactory.enums.config_keys import DefaultKeys
+
 import funcfactory.utils.utils as ff_utils
 import funcfactory.logging.logging as ff_log
 
