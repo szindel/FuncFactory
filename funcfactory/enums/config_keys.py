@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
-class DefaultKeys:
+class ConfigKeys:
     """Enum to hold the default keys"""
 
-    SKIP = 'skip_file'
+    SKIP = "skip_file"
+    DEFAULT = "DEFAULT"
+    SIGNIFICANCE = "significance"
+    CHECK_NAME = "check_name"
+    LOGGER = "logger"
+    STOP_RUN = "stop_run_on_fail"

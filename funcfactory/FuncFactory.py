@@ -4,16 +4,17 @@ import glob
 import os
 import traceback
 import logging
+from importlib import reload
 
 # custom imports
 from funcfactory.enums.severity_level import SeverityLevel
 from funcfactory.enums.check_result import CheckResult
-from funcfactory.enums.config_keys import DefaultKeys
-
+from funcfactory.enums.config_keys import ConfigKeys
 import funcfactory.utils.utils as ff_utils
-import funcfactory.logging.logging as ff_log
 
-class FunFactory:
+
+
+class FuncFactory:
     """A.k.a FunctionFactory: class that "uns" dynamic python pipelines
 
     What are dynamic pipelines you ask?
@@ -27,16 +28,18 @@ class FunFactory:
 
     example usage:
     """
-    def __init__(self, folder_results ='./logs', list_modules_functions=None, func_logging_format=None):
 
-        self.list_function_files = [] # placeholder yaml input files
+    def __init__(
+        self, folder_results="./logs", list_modules_functions=None, get_logger=None
+    ):
+        self.list_function_files = []  # placeholder yaml input files
         self.list_configs = []
         self.config_factory = {}
-        self.dict_factory_objects={}
+        self.dict_factory_objects = {}
 
         os.makedirs(folder_results, exist_ok=True)
-        self.folder_results=folder_results
-        self.logging_formatter = self.func_logging_format if func_logging_format else ff_log.logging_formatter()
+        self.folder_results = folder_results
+        self.get_logger = get_logger if get_logger else self.get_logger_default
 
         if list_modules_functions:
             # self.list_check_modules=list_check_modules
@@ -44,61 +47,88 @@ class FunFactory:
                 print(f"Info - Loading functions from {mod}")
                 self.load_functions(mod)
 
+    def get_logger_default(self, logger_name):
+
+        logger = logging.getLogger(
+            logger_name
+        )  # creates new logger and adds file handler
+        fh = logging.FileHandler(
+            os.path.join(self.folder_results, f"{logger_name}.log")
+        )
+        fh.setFormatter(
+            logging.Formatter(
+                "%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S"
+            )
+        )
+        logger.addHandler(fh)
+        logger.setLevel(logging.INFO)
+        logger.name = logger_name
+        return logger
+
     def read_file(self, file):
-        print(f"Loading Fun from: {file} into Factory")
         assert os.path.isfile(file)
         if not file.endswith((".yaml", ".yml")):
-            print("Not implemented error: Only yaml/yml files supported")
             return None
 
-        config = ff_utils.read_yaml(file)
-        self.config_factory.update({file:config})
+        print(f"Loading Fun from: {file} into Factory")
+        self.config_factory.update({file: ff_utils.read_yaml(file)})
 
     def read_config_folder(self, folder):
         assert os.path.isdir(folder)
-        for file in glob.glob(os.path.join(folder,"*.*"), recursive=True):
+        for file in glob.glob(os.path.join(folder, "*.*"), recursive=True):
             self.read_file(file)
 
     # do the problem is that every config file can have its own defaults.. we need to take care of this
     def run_fun(self):
         print("Creating Fun")
         for file, conf in self.config_factory.items():
-            print(f"Running checks in functions in: {file}")
             try:
-                conf_default = conf.pop('DEFAULT', {})
-
+                conf_default = conf.pop(ConfigKeys.DEFAULT, {})
                 if not conf_default:
-                    print("Warning - Error no default settings found -> Attempting to run fun.")
+                    print("Warning - No default settings found -> Running Func..")
+
                 if not conf:
                     print("Error - no steps found -> Continuing")
                     continue
 
-                if conf_default.get(DefaultKeys.SKIP, None):
+                if conf_default.get(ConfigKeys.SKIP, None):
                     print(f"Skipping functions in: {file}")
                     continue
-
+                print(f"Running checks in functions in: {file}")
                 self.run_fun_single_config_file(conf_default, conf)
 
             except Exception as ex:
                 traceback.print_exc()
                 print(f"error occured in file: {file} -> {ex}")
 
+        # finally flush result and remove loggers
+        print("Shutting down loggers")
+        self.flush_loggers()
+
+    def flush_loggers(self):
+        print("Flushing loggers")
+        logging.shutdown()  # typical
+        # very a typical, logging keeps the already created loggers in memory..
+        # so if we run this a second time. the loggers are already there.. removing
+        # is very problematic so we simply reset after flushing.
+        reload(logging)
+        return None
+
     def run_fun_single_config_file(self, conf_default, conf_steps):
-        """Function that actually runs the checks
-        """
+        """Function that actually runs the checks"""
         assert isinstance(conf_default, dict)
         assert isinstance(conf_steps, dict)
 
-        significance = conf_default.pop("significance", 2)
-        check_name = conf_default.pop("check_name", "General Checks")
-        logger_name = conf_default.pop("logger", "ResultsFunFactory")
+        significance = conf_default.pop(ConfigKeys.SIGNIFICANCE, 2)
+        check_name = conf_default.pop(ConfigKeys.CHECK_NAME, "General Checks")
+        logger_name = conf_default.pop(ConfigKeys.LOGGER, "ResultsFunFactory")
+        bStop_on_fail = conf_default.pop(ConfigKeys.STOP_RUN, False)
 
-        # todo set in utils function -> Implement basicConfig.. (reload logging mod)
-        if logger_name in logging.root.manager.loggerDict:
-            logger = logging.getLogger(logger_name) # get existing logger
-        else:
-            logger = logging.getLogger(logger_name) # creates new logger and adds file handler
-            logger = self.logging_formatter(logger, logger_name)
+        logger = (
+            logging.getLogger(logger_name)
+            if logger_name in logging.root.manager.loggerDict
+            else self.get_logger(logger_name)
+        )
 
         # logger.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
         logger.info(f"\n\n Running: {check_name}\n")
@@ -112,8 +142,12 @@ class FunFactory:
                 kwargs_left = conf_step.pop("kwargs_left")
                 kwargs_right = conf_step.pop("kwargs_right")
 
-                value_left, log_left = func_left(**kwargs_left, **self.dict_factory_objects)
-                value_right, log_right = func_right(**kwargs_right, **self.dict_factory_objects)
+                value_left, log_left = func_left(
+                    **kwargs_left, **self.dict_factory_objects
+                )
+                value_right, log_right = func_right(
+                    **kwargs_right, **self.dict_factory_objects
+                )
 
                 # get the severity level corresponding to the check
                 severity_lvl = SeverityLevel(conf_step["severity_level"])
@@ -135,30 +169,33 @@ class FunFactory:
                 )
                 m += f" - {log_left} - {log_right}"
 
-                # if a explain function is passed add to log.
-                # if func_explainer:
-                #     log_additional = func_explainer(
-                #         **eval(kwargs_right),
-                #         **eval(kwargs_left),
-                #         wb=wb,
-                #         folder_protos=folder_zip,
-                #     )
-                #
-                #     m += f" - Additional Logs: {log_additional}".ljust(70)
-
                 print(f"writing to log for check: {step_name}\n")
                 logger.info(m)
+
+                if bStop_on_fail and (
+                    check_result == CheckResult.FAILED
+                    or check_result == CheckResult.ERROR
+                ):
+                    logger.critical("Run aborted")
+                    print("Run aborted")
+                    break
 
             # bit more info in logger if its a asserted error
             except AssertionError as ex:
                 m = f"{step_name.ljust(9)} - {str(CheckResult(-1).name).ljust(7)} - Severity: {SeverityLevel(3).name.ljust(11)} - Assertion error occured "
                 traceback.print_exc()
                 logger.error(m + f"{ex}")
+                if bStop_on_fail:
+                    print("Run aborted")
+                    break
 
-            except Exception as ex:
+            except Exception:
                 m = f"{step_name.ljust(9)} Uncaught error occured for check "
                 traceback.print_exc()
                 logger.error(m)
+                if bStop_on_fail:
+                    print("Run aborted")
+                    break
 
     def load_functions(self, module):
         for name_func, func in getmembers(module, isfunction):
@@ -168,12 +205,11 @@ class FunFactory:
                 continue
             setattr(self, name_func, func)
 
-    def load_factory_objects(self, *args, **kwargs):
+    def load_factory_objects(self, **kwargs):
         if kwargs:
-            for k,v in kwargs.items():
+            for k, v in kwargs.items():
                 if k in self.__dict__.keys():
                     print(f"Warning - Object: {k} already loaded -> Overwritting")
-                self.dict_factory_objects.update({k:v})
-                # locals()[k] = v # aaah so locals keeps track of the class methods in scope, adding this here
+                self.dict_factory_objects.update({k: v})
         else:
             print("Please load object as kwargs: key=value pair")

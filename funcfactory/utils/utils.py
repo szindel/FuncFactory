@@ -1,7 +1,7 @@
 import yaml
 
 def read_yaml(file):
-    with open(file, 'r') as stream:
+    with open(file, "r") as stream:
         try:
             file_yaml = yaml.safe_load(stream)
             return file_yaml
