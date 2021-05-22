@@ -13,22 +13,21 @@ from funcfactory.enums.config_keys import ConfigKeys
 import funcfactory.utils.utils as ff_utils
 
 
-
 class FuncFactory:
-    """A.k.a FunctionFactory: class that "uns" dynamic python pipelines
+    """A.k.a FunctionFactory: class that "runs" dynamic python pipelines
 
     What are dynamic pipelines you ask?
-    Pipelines that basically change very often. The FunFactory enables you to configure highly dynamic
-    pipelines specified by the standard library ConfigParser package. Users only need to make trivial
-    changes to config files instead of changing lines of production code.
+    Pipelines that basically change very often. The FunFactory enables you to configure
+    highly dynamic pipelines specified by the standard library ConfigParser package.
+    Users only need to make trivial changes to config files instead of changing lines of
+     production code.
 
     All the typical production code matters are taken care of
-    (read: logging, error handeling, result generation). Users simply define functions, load these and
-    specify in what order these needs to be ran/what result one expects.
+    (read: logging, error handeling, result generation). Users simply define functions,
+     load these and specify in what order these needs to be ran/what result one expects.
 
     example usage:
     """
-
     def __init__(
         self, folder_results="./logs", list_modules_functions=None, get_logger=None
     ):
@@ -78,7 +77,8 @@ class FuncFactory:
         for file in glob.glob(os.path.join(folder, "*.*"), recursive=True):
             self.read_file(file)
 
-    # do the problem is that every config file can have its own defaults.. we need to take care of this
+    # do the problem is that every config file can have its own defaults..
+    # we need to take care of this
     def run_fun(self):
         print("Creating Fun")
         for file, conf in self.config_factory.items():
@@ -182,7 +182,11 @@ class FuncFactory:
 
             # bit more info in logger if its a asserted error
             except AssertionError as ex:
-                m = f"{step_name.ljust(9)} - {str(CheckResult(-1).name).ljust(7)} - Severity: {SeverityLevel(3).name.ljust(11)} - Assertion error occured "
+                m = f"{step_name.ljust(9)} " \
+                    f"- {str(CheckResult(-1).name).ljust(7)} " \
+                    f"- Severity: {SeverityLevel(3).name.ljust(11)} " \
+                    f"- Assertion error occured "
+
                 traceback.print_exc()
                 logger.error(m + f"{ex}")
                 if bStop_on_fail:
