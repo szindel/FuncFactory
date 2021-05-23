@@ -7,10 +7,8 @@ import logging
 from importlib import reload
 
 # custom imports
-from funcfactory.enums.severity_level import SeverityLevel
-from funcfactory.enums.check_result import CheckResult
-from funcfactory.enums.config_keys import ConfigKeys
-import funcfactory.utils.utils as ff_utils
+from .enums import (SeverityLevel, CheckResult, ConfigKeys)
+from .utils import read_yaml
 
 
 class FuncFactory:
@@ -70,7 +68,7 @@ class FuncFactory:
             return None
 
         print(f"Loading Fun from: {file} into Factory")
-        self.config_factory.update({file: ff_utils.read_yaml(file)})
+        self.config_factory.update({file: read_yaml(file)})
 
     def read_config_folder(self, folder):
         assert os.path.isdir(folder)

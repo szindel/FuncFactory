@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 import numbers
 
@@ -47,3 +48,36 @@ class CheckResult(Enum):
         else:
             check_result = CheckResult(0)
         return check_result
+
+
+@dataclass(frozen=True)
+class ConfigKeys:
+    """Enum to hold the default keys"""
+
+    SKIP = "skip_file"
+    DEFAULT = "DEFAULT"
+    SIGNIFICANCE = "significance"
+    CHECK_NAME = "check_name"
+    LOGGER = "logger"
+    STOP_RUN = "stop_run_on_fail"
+
+class SeverityLevel(Enum):
+    """Enum used to define severity levels used (Azure standards)"""
+
+    CRITICAL = 4
+    ERROR = 3
+    WARNING = 2
+    INFORMATION = 1
+    VERBOSE = 0
+
+    dict_actions = {
+        4: "Pause data run: needs to be fixed before proceeding",
+        3: "Inform Backend, data run can proceed",
+        2: "No Action (known to fail)",
+        1: "No Action (Check switched off)",
+        0: "No Action (Check switched off)",
+    }
+
+    def get_action(self):
+        return self.dict_actions[self.value]
+

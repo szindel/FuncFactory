@@ -1,1 +1,1 @@
-from .FuncFactory import FuncFactory
+from .funcfactory import FuncFactory
