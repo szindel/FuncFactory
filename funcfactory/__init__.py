@@ -1,1 +1,1 @@
-from .funcfactory import FuncFactory
+from .core import FuncFactory
