@@ -1,3 +1,4 @@
+![alt text](../media/images/factory.png?raw=true)
 
 # Introduction
 Introducing: The FuncFactory! Easily adaptable production grade code on the fly.
