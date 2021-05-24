@@ -1,5 +1,7 @@
 ![alt text](../media/images/factory.png?raw=true)
 
+<p align="center"><img src="../media/images/factory.png" alt="funcfactory logo" width="300" /></p>
+
 # Introduction
 Introducing: The FuncFactory! Easily adaptable production grade code on the fly.
 
