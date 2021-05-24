@@ -1,4 +1,7 @@
 ![alt text](../media/images/factory_transparant_v1.png?raw=true)
+
+![alt text](../media/images/factory_transparant_v2.png?raw=true)
+
 ![alt text](../media/images/factory.png?raw=true)
 <p align="center"><img src="../media/images/factory.png" alt="funcfactory logo" width="300" /></p>
 
