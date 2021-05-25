@@ -3,7 +3,7 @@
 [comment]: <> (![alt text]&#40;../media/images/factory_transparant_v2.png?raw=true&#41;)
 
 [comment]: <> (![alt text]&#40;../media/images/factory.png?raw=true&#41;)
-<p align="center"><img src="../media/images/factory_v5.png" alt="funcfactory logo" width="400" /></p>
+<p align="center"><img src="../media/images/factory_v5.png" alt="funcfactory logo" width="300" /></p>
 
 # Introduction
 Introducing: The FuncFactory! Easily adaptable production grade code on the fly.
