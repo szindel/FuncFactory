@@ -11,7 +11,7 @@ setup(
     name = 'funcfactory',         # How you named your package folder (MyLib)
     packages = ['funcfactory'],   # Chose the same as "name"
     python_requires=">=3.7",
-    version = '0.1.5',      # Start with a small number and increase it with every change you make
+    version = '0.1.6',      # Start with a small number and increase it with every change you make
     license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     long_description=long_description,
     long_description_content_type='text/markdown',
