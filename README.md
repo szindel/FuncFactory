@@ -97,10 +97,10 @@ Step_2:
 ## Final step: Create the FuncFactory and run
 ```python
 from funcfactory import FuncFactory
-import .my_check_functions as my_check_functions
-import .more_check_functions as more_check_functions
+import .my_step_functions as my_step_functions
+import .more_step_functions as more_step_functions
 # init the FuncFactory with the modules containing the functions from step 1
-ff=FuncFactory(list_modules_functions=[my_check_functions, more_check_functions])
+ff=FuncFactory(list_modules_functions=[my_step_functions, more_step_functions])
 
 # Load (all) yaml files from step 2
 ff.read_config_folder("./config_checks")
