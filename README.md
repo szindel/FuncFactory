@@ -103,7 +103,7 @@ import .more_step_functions as more_step_functions
 ff=FuncFactory(list_modules_functions=[my_step_functions, more_step_functions])
 
 # Load (all) yaml files from step 2
-ff.read_config_folder("./config_checks")
+ff.read_config_folder("./my_yaml_files")
 
 # optionally: load objects needed in your steps.
 import xlrd
