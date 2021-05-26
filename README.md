@@ -8,7 +8,6 @@
 
 <h1 align="center">FuncFactory</h1>
 <p align="center"><b>Easily adaptable, Production grade, Python pipelines on the fly.</b></p>
-
 <p align="center">
   <a href="../main/LICENSE.txt"><img src="https://img.shields.io/pypi/l/FuncFactory" alt="License: Apache 2.0"></a>
   <a href="https://pypi.org/project/funcfactory/"><img alt="Pypi FuncFactory" src="https://img.shields.io/pypi/v/FuncFactory?logo=FuncFactory"></a>
