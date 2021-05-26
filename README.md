@@ -14,10 +14,8 @@
   <a href="https://pypi.org/project/funcfactory/"><img alt="Pypi FuncFactory" src="https://img.shields.io/pypi/v/FuncFactory?logo=FuncFactory"></a>
   <a href="ttps://img.shields.io/pypi/pyversions/FuncFactory"><img alt="Py versions" src="https://img.shields.io/pypi/pyversions/FuncFactory"></a>
   <a href="https://github.com/szindel/FuncFactory/actions/workflows/python-package.yml"><img alt="Build soda-sql" src="https://github.com/szindel/FuncFactory/actions/workflows/python-package.yml/badge.svg"></a>
+    <br/> <em> .. We got the Func, you got the Func, she got the Func, he got the Func .. !</em> 
 </p>
-<br/>
-<em> .. We got the Func, you got the Func, she got the Func, he got the Func .. !</em> 
-<br />
 
 # What is it?
 The FuncFactory is an open-source solution that creates and runs easily adaptable, production grade, python pipelines. Users simply configure the pipelines in simple yaml files and the steps of the pipelines in ordinary python functions. Once loaded in the FuncFactory the pipelines can be triggered and the result creation, loging and error handeling is taken care of by the Factor itself. Any developer that knows how to create python functions can therefore easily incorporate these into production grade python pipelines with a handful lines of code.  
@@ -33,6 +31,7 @@ Bringing code from the development fase into production often adds many very sim
 # PyPI
 pip3 install funcfactory
 ```
+
 # Getting started
 In the example below we make a complete python pipeline that compares checksums from a downloaded file and the source.
 
@@ -95,7 +94,7 @@ Step_2:
 - An example is shown where two functions are checked against one another. 
 - Single functions can also be made into steps by comparing the result with a function that only returns a single return code.
 
-## final step: Create the FuncFactory and run
+## Final step: Create the FuncFactory and run
 ```python
 from funcfactory import FuncFactory
 import .my_check_functions as my_check_functions
