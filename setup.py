@@ -12,7 +12,7 @@ setup(
     packages = ['funcfactory'],   # Chose the same as "name"
     python_requires=">=3.7",
     version = '0.1.6',      # Start with a small number and increase it with every change you make
-    license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
+    license='Apache 2.0',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     long_description=long_description,
     long_description_content_type='text/markdown',
     description = 'Python package The FuncFactory! Easily adaptable production grade code on the fly.',   # Give a short description about your library

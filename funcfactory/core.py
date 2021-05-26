@@ -77,7 +77,7 @@ class FuncFactory:
 
     # do the problem is that every config file can have its own defaults..
     # we need to take care of this
-    def run_fun(self):
+    def run_func(self):
         print("Creating Fun")
         for file, conf in self.config_factory.items():
             try:
