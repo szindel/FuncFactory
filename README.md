@@ -79,7 +79,7 @@ Step_1:
   func_left: calc_checksum_file
   func_right: calc_checksum_url
   kwargs_left: {"file":"/user/data/input_file_1.csv"}
-  kwargs_right: {"url":"https://www.my_input_data_url.com/input_file_1.csv",}
+  kwargs_right: {"url":"https://www.my_input_data_url.com/input_file_1.csv"}
 
 Step_2:
   severity_level: 4
